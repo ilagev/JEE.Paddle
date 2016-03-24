@@ -106,7 +106,9 @@ public class DaosService {
     public Token createUserWithInvalidToken() {
         User user = new User("expiredtoken", "expiredtoken@gmail.com", "expired", Calendar.getInstance());
         Token token = new Token(user);
-        token.setExpirationDate(Calendar.getInstance());
+        Calendar expirationDate = Calendar.getInstance();
+        expirationDate.add(Calendar.HOUR_OF_DAY, -10);
+        token.setExpirationDate(expirationDate);
         userDao.save(user);
         tokenDao.save(token);
         return token;
