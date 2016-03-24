@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import config.PersistenceConfig;
 import config.TestsPersistenceConfig;
@@ -21,6 +22,9 @@ public class UserDaoITest {
 
     @Autowired
     private UserDao userDao;
+    
+    @Autowired
+    private TokenDao tokenDao;
 
     @Autowired
     private DaosService daosService;
@@ -53,10 +57,13 @@ public class UserDaoITest {
         assertEquals(u1, userDao.findByValidToken(t1.getValue()));
     }
     
+    @Transactional
     @Test
     public void testFindByInvalidToken() {
         Token token = daosService.createUserWithInvalidToken();
         assertNull(userDao.findByValidToken(token.getValue()));
+        tokenDao.deleteExpiredTokens();
+        assertNull(tokenDao.findByUser(token.getUser()));
     }
     
     
