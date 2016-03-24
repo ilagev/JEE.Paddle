@@ -107,6 +107,8 @@ public class DaosService {
         User user = new User("expiredtoken", "expiredtoken@gmail.com", "expired", Calendar.getInstance());
         Token token = new Token(user);
         token.setExpirationDate(Calendar.getInstance());
+        userDao.save(user);
+        tokenDao.save(token);
         return token;
     }
 }
