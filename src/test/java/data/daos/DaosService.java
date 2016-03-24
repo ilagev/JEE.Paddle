@@ -102,4 +102,11 @@ public class DaosService {
     public void deleteAll() {
         genericService.deleteAllExceptAdmin();
     }
+    
+    public Token createUserWithInvalidToken() {
+        User user = new User("expiredtoken", "expiredtoken@gmail.com", "expired", Calendar.getInstance());
+        Token token = new Token(user);
+        token.setExpirationDate(Calendar.getInstance());
+        return token;
+    }
 }
