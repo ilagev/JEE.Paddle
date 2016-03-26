@@ -2,7 +2,6 @@ package business.controllers;
 
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,7 @@ import data.daos.CourtDao;
 import data.daos.ReserveDao;
 import data.daos.TrainingDao;
 import data.daos.UserDao;
-import data.entities.Court;
+import data.entities.Reserve;
 import data.entities.Training;
 import data.entities.User;
 
@@ -50,32 +49,51 @@ public class TrainingController {
     }
 
     public String createTraining(String username, TrainingWrapper trainingWrapper) {
-        if (this.existsReservation(trainingWrapper.getStartTime())) {
+        if (this.existsReservation(trainingWrapper.getStartTime(), trainingWrapper.getCourtId())) {
             return "Ya hay una reserva de pista a esa hora";
-        } else if (this.existsTraining(trainingWrapper.getStartTime(), username)) {
+        } else if (this.existsTrainingThatWeek(trainingWrapper.getStartTime(), username)) {
             return "Ya hay programada una clase del entrenador " + username + " en esta semana";
         } else {
-            Court court = courtDao.findById(trainingWrapper.getCourtId());
-            User trainer = userDao.findByUsernameOrEmail(username);
-            Set<User> trainees = new HashSet<User>();
             Calendar startTime = trainingWrapper.getStartTime();
             Calendar endTime = (Calendar) startTime.clone();
             endTime.add(Calendar.HOUR_OF_DAY, TRAINING_DURATION);
             
-            Training training = new Training(court, trainer, trainees, startTime, endTime);
+            Training training = new Training(
+                    courtDao.findById(trainingWrapper.getCourtId()),
+                    userDao.findByUsernameOrEmail(username),
+                    new HashSet<User>(),
+                    startTime,
+                    endTime);
+            
             trainingDao.save(training);
         }
         return null;
     }
 
-    private boolean existsTraining(Calendar startTime, String username) {
-        // TODO Auto-generated method stub
+    private boolean existsTrainingThatWeek(Calendar startTime, String username) {
+        Calendar beginningOfThatWeek = (Calendar) startTime.clone();
+        beginningOfThatWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        beginningOfThatWeek.set(Calendar.HOUR_OF_DAY, 0);
+        beginningOfThatWeek.set(Calendar.MINUTE, 0);
+        beginningOfThatWeek.set(Calendar.SECOND, 0);
+        
+        Calendar endingOfThatWeek = (Calendar) startTime.clone();
+        endingOfThatWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        endingOfThatWeek.set(Calendar.HOUR_OF_DAY, 23);
+        endingOfThatWeek.set(Calendar.MINUTE, 59);
+        endingOfThatWeek.set(Calendar.SECOND, 59);
+        
+        for (Reserve reserve : reserveDao.findByDateBetween(beginningOfThatWeek, endingOfThatWeek)) {
+            if (reserve.getUser().getUsername() == username) {
+                return true;
+            }
+        }
+        
         return false;
     }
 
-    private boolean existsReservation(Calendar startTime) {
-        // TODO Auto-generated method stub
-        return false;
+    private boolean existsReservation(Calendar startTime, int courtId) {
+        return reserveDao.findByCourtAndDate(courtDao.findById(courtId), startTime) != null;
     }
 
 }
