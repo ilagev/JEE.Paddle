@@ -48,6 +48,14 @@ public class Training {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+    
+    public Training(Court court, User trainer, Set<User> trainees, Calendar startTime, Calendar endTime) {
+        this.court = court;
+        this.trainer = trainer;
+        this.trainees = trainees;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 
     public int getId() {
         return id;

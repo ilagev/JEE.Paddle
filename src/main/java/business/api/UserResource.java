@@ -24,17 +24,9 @@ public class UserResource {
 
     @RequestMapping(method = RequestMethod.POST)
     public void registration(@RequestBody UserWrapper userWrapper) throws InvalidUserFieldException, AlreadyExistUserFieldException {
-        validateField(userWrapper.getUsername(), "username");
-        validateField(userWrapper.getEmail(), "email");
-        validateField(userWrapper.getPassword(), "password");
+        Validation.validateUser(userWrapper);
         if (!this.userController.registration(userWrapper)) {
             throw new AlreadyExistUserFieldException();
-        }
-    }
-
-    private void validateField(String field, String msg) throws InvalidUserFieldException {
-        if (field == null || field.isEmpty()) {
-            throw new InvalidUserFieldException(msg);
         }
     }
 
