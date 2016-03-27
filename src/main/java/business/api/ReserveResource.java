@@ -41,21 +41,13 @@ public class ReserveResource {
         Calendar calendarDay = Calendar.getInstance();
         if (day != null) {
             calendarDay.setTimeInMillis(day);
-            this.validateDay(calendarDay);
+            Validation.validateDay(calendarDay);
         }
         calendarDay.set(Calendar.HOUR, 0);
         calendarDay.set(Calendar.MINUTE, 0);
         calendarDay.set(Calendar.SECOND, 0);
         calendarDay.set(Calendar.MILLISECOND, 0);
         return reserveController.showCourtAvailability(calendarDay);
-    }
-
-    private void validateDay(Calendar day) throws InvalidDateException {
-        Calendar calendarDay = Calendar.getInstance();
-        calendarDay.add(Calendar.DAY_OF_YEAR, -1);
-        if (calendarDay.after(day)) {
-            throw new InvalidDateException("La fecha no puede ser un día pasado");
-        }
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -71,7 +63,7 @@ public class ReserveResource {
         if (!reserveController.rightTime(date.get(Calendar.HOUR_OF_DAY))) {
             throw new InvalidCourtReserveException(date.get(Calendar.HOUR_OF_DAY) + " fuera de rango");
         }
-        this.validateDay(date);
+        Validation.validateDay(date);
         if (!reserveController.reserveCourt(availableTime.getCourtId(), date, activeUser.getUsername())) {
             throw new InvalidCourtReserveException(availableTime.getCourtId() + "-" + availableTime.getTime());
 

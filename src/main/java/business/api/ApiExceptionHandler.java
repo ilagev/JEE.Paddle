@@ -16,6 +16,7 @@ import business.api.exceptions.InvalidUserFieldException;
 import business.api.exceptions.MalformedHeaderException;
 import business.api.exceptions.UnauthorizedException;
 import business.api.exceptions.NotFoundUserIdException;
+import business.api.exceptions.UnableToCreateTrainingException;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
@@ -36,7 +37,7 @@ public class ApiExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MalformedHeaderException.class, InvalidUserFieldException.class, InvalidDateException.class})
+    @ExceptionHandler({MalformedHeaderException.class, InvalidUserFieldException.class, InvalidDateException.class, UnableToCreateTrainingException.class})
     @ResponseBody
     public ErrorMessage badRequest(ApiException exception) {
         ErrorMessage apiErrorMessage = new ErrorMessage(exception);
