@@ -53,7 +53,7 @@ public class CourtResourceFunctionalTesting {
     @Test
     public void testChangeCourtActivationTrueUnauthorization() {
         restService.createCourt("1");
-        String token = restService.registerAndLoginPlayer();
+        String token = restService.registerAndLoginPlayer("player");
         try {
             new RestBuilder<Object>(RestService.URL).path(Uris.COURTS).pathId(1).path(Uris.ACTIVE).basicAuth(token, "").post().build();
         } catch (HttpClientErrorException httpError) {

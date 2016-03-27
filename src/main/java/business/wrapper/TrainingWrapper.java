@@ -7,6 +7,16 @@ public class TrainingWrapper {
     private int courtId;
     
     private Calendar startTime;
+    
+    public TrainingWrapper() {
+        
+    }
+
+    public TrainingWrapper(int courtId, Calendar startTime) {
+        super();
+        this.courtId = courtId;
+        this.startTime = startTime;
+    }
 
     public int getCourtId() {
         return courtId;

@@ -20,16 +20,16 @@ public class RestService {
         return token.getToken();
     }
 
-    public String registerAndLoginPlayer() {
-        UserWrapper player = new UserWrapperBuilder().role(Role.PLAYER).build();
+    public String registerAndLoginPlayer(String username) {
+        UserWrapper player = new UserWrapperBuilder().role(Role.PLAYER).username(username).email(username + "@mail.com").build();
         new RestBuilder<Object>(URL).path(Uris.USERS).body(player).post().build();
         TokenWrapper token = new RestBuilder<TokenWrapper>(URL).path(Uris.TOKENS).basicAuth(player.getUsername(), player.getPassword())
                 .clazz(TokenWrapper.class).post().build();
         return token.getToken();
     }
     
-    public String registerAndLoginTrainer() {
-        UserWrapper player = new UserWrapperBuilder().username("trainer").password("trainerpassword").email("t@t.com").role(Role.TRAINER).build();
+    public String registerAndLoginTrainer(String username) {
+        UserWrapper player = new UserWrapperBuilder().username(username).password(username + "password").email(username + "@mail.com").role(Role.TRAINER).build();
         new RestBuilder<Object>(URL).path(Uris.USERS).body(player).post().build();
         TokenWrapper token = new RestBuilder<TokenWrapper>(URL).path(Uris.TOKENS).basicAuth(player.getUsername(), player.getPassword())
                 .clazz(TokenWrapper.class).post().build();

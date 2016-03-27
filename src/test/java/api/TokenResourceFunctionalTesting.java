@@ -10,7 +10,7 @@ public class TokenResourceFunctionalTesting {
 
     @Test
     public void testLoginPlayer() {
-        String token = new RestService().registerAndLoginPlayer();
+        String token = new RestService().registerAndLoginPlayer("player");
         assertTrue(token.length() > 20);
         LogManager.getLogger(this.getClass()).info("testLoginPlayer (token:" + token + ")");
     }

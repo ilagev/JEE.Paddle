@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import business.api.exceptions.InvalidCourtReserveException;
 import business.api.exceptions.InvalidDateException;
 import business.api.exceptions.InvalidUserFieldException;
+import business.api.exceptions.NotFoundCourtIdException;
 import business.api.exceptions.UnableToCreateTrainingException;
 import business.controllers.CourtController;
 import business.controllers.TrainingController;
@@ -35,11 +35,10 @@ public class TrainingResource {
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public void createTraining(@AuthenticationPrincipal User activeUser, @RequestBody TrainingWrapper trainingWrapper) throws InvalidUserFieldException, UnableToCreateTrainingException, InvalidCourtReserveException, InvalidDateException {
+    public void createTraining(@AuthenticationPrincipal User activeUser, @RequestBody TrainingWrapper trainingWrapper) throws InvalidUserFieldException, UnableToCreateTrainingException, NotFoundCourtIdException, InvalidDateException {
         Validation.validateField(activeUser.getUsername(), "username");
-        Validation.validateField(activeUser.getPassword(), "password");
         if (!courtController.exist(trainingWrapper.getCourtId()))
-            throw new InvalidCourtReserveException("" + trainingWrapper.getCourtId());
+            throw new NotFoundCourtIdException("" + trainingWrapper.getCourtId());
         Validation.validateDay(trainingWrapper.getStartTime());
         
         String message = trainingController.createTraining(activeUser.getUsername(), trainingWrapper);

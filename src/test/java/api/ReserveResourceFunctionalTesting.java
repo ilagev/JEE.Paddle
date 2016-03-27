@@ -17,7 +17,7 @@ public class ReserveResourceFunctionalTesting {
     public void testshowAvailability() {
         restService.createCourt("1");
         restService.createCourt("2");
-        String token = restService.registerAndLoginPlayer();
+        String token = restService.registerAndLoginPlayer("player");
         Calendar day = Calendar.getInstance();
         day.add(Calendar.DAY_OF_YEAR, 1);
         day.set(Calendar.HOUR_OF_DAY, 12);
@@ -34,7 +34,7 @@ public class ReserveResourceFunctionalTesting {
     public void testReserveCourt() {
         restService.createCourt("1");
         restService.createCourt("2");
-        String token = restService.registerAndLoginPlayer();
+        String token = restService.registerAndLoginPlayer("player");
         Calendar day = Calendar.getInstance();
         day.add(Calendar.DAY_OF_YEAR, 1);
         day.set(Calendar.HOUR_OF_DAY,12);

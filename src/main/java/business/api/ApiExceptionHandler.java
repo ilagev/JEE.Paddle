@@ -14,6 +14,7 @@ import business.api.exceptions.InvalidCourtReserveException;
 import business.api.exceptions.InvalidDateException;
 import business.api.exceptions.InvalidUserFieldException;
 import business.api.exceptions.MalformedHeaderException;
+import business.api.exceptions.NotFoundCourtIdException;
 import business.api.exceptions.UnauthorizedException;
 import business.api.exceptions.NotFoundUserIdException;
 import business.api.exceptions.UnableToCreateTrainingException;
@@ -22,7 +23,7 @@ import business.api.exceptions.UnableToCreateTrainingException;
 public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({NotFoundUserIdException.class})
+    @ExceptionHandler({NotFoundUserIdException.class, NotFoundCourtIdException.class})
     @ResponseBody
     public ErrorMessage notFoundRequest(ApiException exception) {
         ErrorMessage apiErrorMessage = new ErrorMessage(exception);
