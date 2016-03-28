@@ -15,15 +15,17 @@ import business.api.exceptions.InvalidDateException;
 import business.api.exceptions.InvalidUserFieldException;
 import business.api.exceptions.MalformedHeaderException;
 import business.api.exceptions.NotFoundCourtIdException;
+import business.api.exceptions.NotFoundTrainingIdException;
 import business.api.exceptions.UnauthorizedException;
 import business.api.exceptions.NotFoundUserIdException;
+import business.api.exceptions.ReachedMaximumTraineesException;
 import business.api.exceptions.UnableToCreateTrainingException;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({NotFoundUserIdException.class, NotFoundCourtIdException.class})
+    @ExceptionHandler({NotFoundUserIdException.class, NotFoundCourtIdException.class, NotFoundTrainingIdException.class})
     @ResponseBody
     public ErrorMessage notFoundRequest(ApiException exception) {
         ErrorMessage apiErrorMessage = new ErrorMessage(exception);
@@ -38,7 +40,7 @@ public class ApiExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MalformedHeaderException.class, InvalidUserFieldException.class, InvalidDateException.class, UnableToCreateTrainingException.class})
+    @ExceptionHandler({MalformedHeaderException.class, InvalidUserFieldException.class, InvalidDateException.class, UnableToCreateTrainingException.class, ReachedMaximumTraineesException.class})
     @ResponseBody
     public ErrorMessage badRequest(ApiException exception) {
         ErrorMessage apiErrorMessage = new ErrorMessage(exception);
@@ -52,7 +54,7 @@ public class ApiExceptionHandler {
         ErrorMessage apiErrorMessage = new ErrorMessage(exception);
         return apiErrorMessage;
     }
-
+    
     // @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     // @ExceptionHandler({Exception.class})
     // @ResponseBody

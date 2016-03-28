@@ -5,7 +5,9 @@ import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
+import business.api.exceptions.ReachedMaximumTraineesException;
 import business.wrapper.TrainingWrapper;
 import data.daos.CourtDao;
 import data.daos.ReserveDao;
@@ -16,9 +18,12 @@ import data.entities.Training;
 import data.entities.User;
 
 @Controller
+@Transactional
 public class TrainingController {
     
-    private static final int TRAINING_DURATION = 1; //hours
+    public static final int TRAINING_DURATION = 1; //hours
+    
+    public static final int MAX_TRAINEES = 4;
     
     private TrainingDao trainingDao;
     
@@ -48,11 +53,11 @@ public class TrainingController {
         this.userDao = userDao;
     }
 
-    public String createTraining(String username, TrainingWrapper trainingWrapper) {
+    public TrainingWrapper createTraining(String username, TrainingWrapper trainingWrapper) {
         if (this.existsReservation(trainingWrapper.getStartTime(), trainingWrapper.getCourtId())) {
-            return "Ya hay una reserva de pista a esa hora";
+            return new TrainingWrapper(-1);
         } else if (this.existsTrainingThatWeek(trainingWrapper.getStartTime(), username)) {
-            return "Ya hay programada una clase del entrenador " + username + " en esta semana";
+            return new TrainingWrapper(-2);
         } else {
             Calendar startTime = trainingWrapper.getStartTime();
             Calendar endTime = (Calendar) startTime.clone();
@@ -65,9 +70,9 @@ public class TrainingController {
                     startTime,
                     endTime);
             
-            trainingDao.save(training);
+            int id = trainingDao.save(training).getId();
+            return new TrainingWrapper(id, training.getCourt().getId(), username, training.getStartTime());
         }
-        return null;
     }
 
     private boolean existsTrainingThatWeek(Calendar startTime, String username) {
@@ -94,6 +99,19 @@ public class TrainingController {
 
     private boolean existsReservation(Calendar startTime, int courtId) {
         return reserveDao.findByCourtAndDate(courtDao.findById(courtId), startTime) != null;
+    }
+
+    public boolean exists(int id) {
+        return trainingDao.exists(id);
+    }
+
+    public void registerTraining(int id, String username) throws ReachedMaximumTraineesException {
+        Training training = trainingDao.findById(id);
+        User user = userDao.findByUsernameOrEmail(username);
+        if (training.getTrainees().size() >= MAX_TRAINEES)
+            throw new ReachedMaximumTraineesException("Ya hay " + MAX_TRAINEES + " personas apuntadas");
+        training.getTrainees().add(user);
+        trainingDao.save(training);
     }
 
 }
