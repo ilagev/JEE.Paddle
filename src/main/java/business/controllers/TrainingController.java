@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-import business.api.exceptions.ReachedMaximumTraineesException;
 import business.wrapper.TrainingWrapper;
 import data.daos.CourtDao;
 import data.daos.ReserveDao;
@@ -105,13 +104,14 @@ public class TrainingController {
         return trainingDao.exists(id);
     }
 
-    public void registerTraining(int id, String username) throws ReachedMaximumTraineesException {
+    public TrainingWrapper registerTraining(int id, String username) {
         Training training = trainingDao.findById(id);
         User user = userDao.findByUsernameOrEmail(username);
         if (training.getTrainees().size() >= MAX_TRAINEES)
-            throw new ReachedMaximumTraineesException("Ya hay " + MAX_TRAINEES + " personas apuntadas");
+            return new TrainingWrapper(-1);
         training.getTrainees().add(user);
-        trainingDao.save(training);
+        int trainingId = trainingDao.save(training).getId();
+        return new TrainingWrapper(trainingId, training.getCourt().getId(), username, training.getStartTime());
     }
 
 }

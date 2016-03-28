@@ -55,10 +55,13 @@ public class TrainingResource {
     }
     
     @RequestMapping(value = Uris.ID, method = RequestMethod.PUT)
-    public void registerTraining(@AuthenticationPrincipal User activeUser, @PathVariable int id) throws InvalidUserFieldException, NotFoundTrainingIdException, ReachedMaximumTraineesException {
+    public TrainingWrapper registerTraining(@AuthenticationPrincipal User activeUser, @PathVariable int id) throws InvalidUserFieldException, NotFoundTrainingIdException, ReachedMaximumTraineesException {
         Validation.validateField(activeUser.getUsername(), "username");
         if (!trainingController.exists(id))
             throw new NotFoundTrainingIdException("No existe ese entrenamiento");
-        trainingController.registerTraining(id, activeUser.getUsername());
+        TrainingWrapper t = trainingController.registerTraining(id, activeUser.getUsername());
+        if (t.getId() == -1)
+            throw new ReachedMaximumTraineesException("El cupo esta lleno");
+        return t;
     }
 }
