@@ -92,7 +92,7 @@ public class TrainingResourceFunctionalTesting {
         } catch (HttpClientErrorException httpError) {
             assertEquals(HttpStatus.NOT_FOUND, httpError.getStatusCode());
             LogManager.getLogger(this.getClass()).info(
-                    "testCreateTraining (" + httpError.getMessage() + "):\n    " + httpError.getResponseBodyAsString());
+                    "testRegisterTraining (" + httpError.getMessage() + "):\n    " + httpError.getResponseBodyAsString());
         }
         
         // successful case
@@ -105,7 +105,7 @@ public class TrainingResourceFunctionalTesting {
         } catch (HttpClientErrorException httpError) {
             assertEquals(HttpStatus.BAD_REQUEST, httpError.getStatusCode());
             LogManager.getLogger(this.getClass()).info(
-                    "testCreateTraining (" + httpError.getMessage() + "):\n    " + httpError.getResponseBodyAsString());
+                    "testRegisterTraining (" + httpError.getMessage() + "):\n    " + httpError.getResponseBodyAsString());
         }
     }
     
@@ -120,6 +120,45 @@ public class TrainingResourceFunctionalTesting {
         }
         TrainingWrapper[] list = new RestBuilder<TrainingWrapper[]>(RestService.URL).path(Uris.TRAININGS).basicAuth(tokensPlayer.get(0), "").clazz(TrainingWrapper[].class).get().build();
         assertEquals(list.length, numberOfTrainings);
+    }
+    
+    @Test
+    public void testDeleteTrainingPlayer() {
+        // create training
+        Calendar date = Calendar.getInstance();
+        TrainingWrapper trainingBody = new TrainingWrapper(1, date);
+        TrainingWrapper training = new RestBuilder<TrainingWrapper>(RestService.URL).path(Uris.TRAININGS).basicAuth(tokenTrainer, "").body(trainingBody).clazz(TrainingWrapper.class).post().build();
+        
+        // sign up some trainees
+        int numberOfTrainees = 3;
+        for (int i = 0; i < numberOfTrainees; i++) {
+            training = new RestBuilder<TrainingWrapper>(RestService.URL).path(Uris.TRAININGS).pathId(training.getId()).basicAuth(tokensPlayer.get(i), "").clazz(TrainingWrapper.class).put().build();
+        }
+        
+        // delete a trainee
+        new RestBuilder<String>(RestService.URL).path(Uris.TRAININGS).pathId(training.getId()).path(Uris.TRAINEES).pathId(training.getTraineesIDs().get(0)).basicAuth(tokenTrainer, "").delete().build();
+        
+        // check number of trainings into the DB
+        TrainingWrapper[] list = new RestBuilder<TrainingWrapper[]>(RestService.URL).path(Uris.TRAININGS).basicAuth(tokensPlayer.get(0), "").clazz(TrainingWrapper[].class).get().build();
+        assertEquals(list[0].getTraineesIDs().size(), numberOfTrainees - 1);
+        
+        // non-existent training ID
+        try {
+            new RestBuilder<String>(RestService.URL).path(Uris.TRAININGS).pathId("-5").path(Uris.TRAINEES).pathId(training.getTraineesIDs().get(0)).basicAuth(tokenTrainer, "").delete().build();
+        } catch (HttpClientErrorException httpError) {
+            assertEquals(HttpStatus.NOT_FOUND, httpError.getStatusCode());
+            LogManager.getLogger(this.getClass()).info(
+                    "testDeleteTrainingPlayer (" + httpError.getMessage() + "):\n    " + httpError.getResponseBodyAsString());
+        }
+        
+        // non-existent trainee ID
+        try {
+            new RestBuilder<String>(RestService.URL).path(Uris.TRAININGS).pathId(training.getId()).path(Uris.TRAINEES).pathId("-5").basicAuth(tokenTrainer, "").delete().build();
+        } catch (HttpClientErrorException httpError) {
+            assertEquals(HttpStatus.NOT_FOUND, httpError.getStatusCode());
+            LogManager.getLogger(this.getClass()).info(
+                    "testDeleteTrainingPlayer (" + httpError.getMessage() + "):\n    " + httpError.getResponseBodyAsString());
+        }
     }
     
     @After

@@ -1,6 +1,7 @@
 package business.wrapper;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class TrainingWrapper {
     
@@ -11,6 +12,8 @@ public class TrainingWrapper {
     private String trainerUsername;
     
     private Calendar startTime;
+    
+    private List<Integer> traineesIDs;
     
     public TrainingWrapper() {
         
@@ -33,6 +36,15 @@ public class TrainingWrapper {
         this.courtId = courtId;
         this.trainerUsername = trainerUsername;
         this.startTime = startTime;
+    }
+
+    public TrainingWrapper(int id, int courtId, String trainerUsername, Calendar startTime, List<Integer> traineesIDs) {
+        super();
+        this.id = id;
+        this.courtId = courtId;
+        this.trainerUsername = trainerUsername;
+        this.startTime = startTime;
+        this.traineesIDs = traineesIDs;
     }
 
     public int getCourtId() {
@@ -70,6 +82,14 @@ public class TrainingWrapper {
 
     public void setTrainerUsername(String trainerUsername) {
         this.trainerUsername = trainerUsername;
+    }
+    
+    public List<Integer> getTraineesIDs() {
+        return traineesIDs;
+    }
+
+    public void setTraineesIDs(List<Integer> traineesIDs) {
+        this.traineesIDs = traineesIDs;
     }
     
 }

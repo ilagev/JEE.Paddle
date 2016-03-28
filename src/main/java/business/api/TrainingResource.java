@@ -81,8 +81,8 @@ public class TrainingResource {
         return trainingController.showTrainings();
     }
     
-    @RequestMapping(value = Uris.ID + Uris.TRAINEES + Uris.TRAINEE_ID, method = RequestMethod.GET)
-    public void deleteTrainingPlayer(@PathVariable(Uris.ID) int trainingId, @PathVariable(Uris.TRAINEE_ID) int traineeId) throws NotFoundTrainingIdException, NotFoundUserIdException {
+    @RequestMapping(value = Uris.ID + Uris.TRAINEES + Uris.TRAINEE_ID, method = RequestMethod.DELETE)
+    public void deleteTrainingPlayer(@PathVariable("id") int trainingId, @PathVariable("traineeId") int traineeId) throws NotFoundTrainingIdException, NotFoundUserIdException {
         if (!trainingController.exists(trainingId))
             throw new NotFoundTrainingIdException("No existe ese entrenamiento");
         if (!userController.exists(traineeId))
