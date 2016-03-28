@@ -37,4 +37,8 @@ public class UserController {
             return false;
         }
     }
+
+    public boolean exists(int traineeId) {
+        return userDao.findById(traineeId) != null;
+    }
 }

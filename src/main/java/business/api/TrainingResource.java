@@ -15,10 +15,12 @@ import business.api.exceptions.InvalidDateException;
 import business.api.exceptions.InvalidUserFieldException;
 import business.api.exceptions.NotFoundCourtIdException;
 import business.api.exceptions.NotFoundTrainingIdException;
+import business.api.exceptions.NotFoundUserIdException;
 import business.api.exceptions.ReachedMaximumTraineesException;
 import business.api.exceptions.UnableToCreateTrainingException;
 import business.controllers.CourtController;
 import business.controllers.TrainingController;
+import business.controllers.UserController;
 import business.wrapper.TrainingWrapper;
 
 @RestController
@@ -28,6 +30,8 @@ public class TrainingResource {
     private TrainingController trainingController;
     
     private CourtController courtController;
+    
+    private UserController userController;
 
     @Autowired
     public void setTrainingController(TrainingController trainingController) {
@@ -37,6 +41,11 @@ public class TrainingResource {
     @Autowired
     public void setCourtController(CourtController courtController) {
         this.courtController = courtController;
+    }
+    
+    @Autowired
+    public void setCourtController(UserController userController) {
+        this.userController = userController;
     }
     
     @RequestMapping(method = RequestMethod.POST)
@@ -70,5 +79,14 @@ public class TrainingResource {
     @RequestMapping(method = RequestMethod.GET)
     public List<TrainingWrapper> showTrainings() {
         return trainingController.showTrainings();
+    }
+    
+    @RequestMapping(value = Uris.ID + Uris.TRAINEES + Uris.TRAINEE_ID, method = RequestMethod.GET)
+    public void deleteTrainingPlayer(@PathVariable(Uris.ID) int trainingId, @PathVariable(Uris.TRAINEE_ID) int traineeId) throws NotFoundTrainingIdException, NotFoundUserIdException {
+        if (!trainingController.exists(trainingId))
+            throw new NotFoundTrainingIdException("No existe ese entrenamiento");
+        if (!userController.exists(traineeId))
+            throw new NotFoundUserIdException("No existe ese usuario");
+        trainingController.deleteTrainingPlayer(trainingId, traineeId);
     }
 }

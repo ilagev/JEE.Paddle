@@ -127,4 +127,12 @@ public class TrainingController {
         return trainingsWrapper;
     }
 
+    public void deleteTrainingPlayer(int trainingId, int traineeId) {
+        Training training = trainingDao.findById(trainingId);
+        for (User trainee : training.getTrainees())
+            if (trainee.getId() == traineeId)
+                training.getTrainees().remove(trainee);
+        trainingDao.save(training);
+    }
+
 }
