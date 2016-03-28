@@ -1,7 +1,9 @@
 package business.controllers;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -112,6 +114,17 @@ public class TrainingController {
         training.getTrainees().add(user);
         int trainingId = trainingDao.save(training).getId();
         return new TrainingWrapper(trainingId, training.getCourt().getId(), username, training.getStartTime());
+    }
+
+    public List<TrainingWrapper> showTrainings() {
+        List<TrainingWrapper> trainingsWrapper = new ArrayList<>();
+        List<Training> trainings = trainingDao.findAll();
+        for (Training t : trainings)
+            trainingsWrapper.add(new TrainingWrapper(t.getId(),
+                                                     t.getCourt().getId(),
+                                                     t.getTrainer().getUsername(),
+                                                     t.getStartTime()));
+        return trainingsWrapper;
     }
 
 }

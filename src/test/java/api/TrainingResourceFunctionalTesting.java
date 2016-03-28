@@ -109,6 +109,19 @@ public class TrainingResourceFunctionalTesting {
         }
     }
     
+    @Test
+    public void testShowAllTrainings() {
+        int numberOfTrainings = 5;
+        for (int i = 0; i < numberOfTrainings; i++) {
+            Calendar date = Calendar.getInstance();
+            date.add(Calendar.DAY_OF_MONTH, i + 5);
+            TrainingWrapper trainingBody = new TrainingWrapper(1, date);
+            new RestBuilder<TrainingWrapper>(RestService.URL).path(Uris.TRAININGS).basicAuth(tokenTrainer, "").body(trainingBody).clazz(TrainingWrapper.class).post().build();
+        }
+        TrainingWrapper[] list = new RestBuilder<TrainingWrapper[]>(RestService.URL).path(Uris.TRAININGS).basicAuth(tokensPlayer.get(0), "").clazz(TrainingWrapper[].class).get().build();
+        assertEquals(list.length, numberOfTrainings);
+    }
+    
     @After
     public void deleteAll() {
         new RestService().deleteAll();

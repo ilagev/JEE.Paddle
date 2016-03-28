@@ -1,5 +1,7 @@
 package business.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -63,5 +65,10 @@ public class TrainingResource {
         if (t.getId() == -1)
             throw new ReachedMaximumTraineesException("El cupo esta lleno");
         return t;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET)
+    public List<TrainingWrapper> showTrainings() {
+        return trainingController.showTrainings();
     }
 }
