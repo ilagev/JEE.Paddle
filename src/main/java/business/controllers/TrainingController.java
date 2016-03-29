@@ -153,4 +153,8 @@ public class TrainingController {
         trainingDao.delete(trainingDao.findById(id));
     }
 
+    public boolean exists(int courtId, Calendar time) {
+        return trainingDao.findByCourtAndStartTime(courtDao.findById(courtId), time) != null;
+    }
+
 }

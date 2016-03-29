@@ -15,6 +15,7 @@ import business.api.exceptions.InvalidCourtReserveException;
 import business.api.exceptions.InvalidDateException;
 import business.controllers.CourtController;
 import business.controllers.ReserveController;
+import business.controllers.TrainingController;
 import business.wrapper.Availability;
 import business.wrapper.AvailableTime;
 
@@ -25,6 +26,8 @@ public class ReserveResource {
     private ReserveController reserveController;
 
     private CourtController courtController;
+    
+    private TrainingController trainingController;
 
     @Autowired
     public void setCourtController(CourtController courtController) {
@@ -34,6 +37,11 @@ public class ReserveResource {
     @Autowired
     public void setReserveController(ReserveController reserveController) {
         this.reserveController = reserveController;
+    }
+    
+    @Autowired
+    public void setTrainingController(TrainingController trainingController) {
+        this.trainingController = trainingController;
     }
 
     @RequestMapping(value = Uris.AVAILABILITY, method = RequestMethod.GET)
@@ -53,7 +61,8 @@ public class ReserveResource {
     @RequestMapping(method = RequestMethod.POST)
     public void reserveCourt(@AuthenticationPrincipal User activeUser, @RequestBody AvailableTime availableTime)
             throws InvalidCourtReserveException, InvalidDateException {
-        if (!courtController.exist(availableTime.getCourtId())) {
+        if (!courtController.exist(availableTime.getCourtId()) &&
+            !trainingController.exists(availableTime.getCourtId(), availableTime.getTime())) {
             throw new InvalidCourtReserveException("" + availableTime.getCourtId());
         }
         Calendar date = availableTime.getTime();
