@@ -37,9 +37,9 @@ public class UserResourceFunctionalTesting {
 
     @Test
     public void testRepeatingFieldCreate() {
-        UserWrapper userWrapper = new UserWrapperBuilder().build();
-        new RestBuilder<Object>(RestService.URL).path(Uris.USERS).body(userWrapper).post().build();
+        UserWrapper userWrapper = new UserWrapperBuilder().username("pepe").build();
         try {
+            new RestBuilder<Object>(RestService.URL).path(Uris.USERS).body(userWrapper).post().build();
             new RestBuilder<Object>(RestService.URL).path(Uris.USERS).body(userWrapper).post().build();
             fail();
         } catch (HttpClientErrorException httpError) {
