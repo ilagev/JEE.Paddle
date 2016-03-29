@@ -89,4 +89,11 @@ public class TrainingResource {
             throw new NotFoundUserIdException("No existe ese usuario");
         trainingController.deleteTrainingPlayer(trainingId, traineeId);
     }
+    
+    @RequestMapping(value = Uris.ID, method = RequestMethod.DELETE)
+    public void deleteTraining(@PathVariable int id) throws NotFoundTrainingIdException {
+        if (!trainingController.exists(id))
+            throw new NotFoundTrainingIdException("No existe ese entrenamiento");
+        trainingController.deleteTraining(id);
+    }
 }

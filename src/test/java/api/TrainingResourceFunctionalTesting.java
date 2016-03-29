@@ -161,6 +161,28 @@ public class TrainingResourceFunctionalTesting {
         }
     }
     
+    @Test
+    public void testDeleteTraining() {
+        // create training
+        Calendar date = Calendar.getInstance();
+        TrainingWrapper trainingBody = new TrainingWrapper(1, date);
+        TrainingWrapper training = new RestBuilder<TrainingWrapper>(RestService.URL).path(Uris.TRAININGS).basicAuth(tokenTrainer, "").body(trainingBody).clazz(TrainingWrapper.class).post().build();
+        
+        new RestBuilder<String>(RestService.URL).path(Uris.TRAININGS).pathId(training.getId()).basicAuth(tokenTrainer, "").delete().build();
+        
+        // non-existent ID
+        try {
+            new RestBuilder<String>(RestService.URL).path(Uris.TRAININGS).pathId(-1).basicAuth(tokenTrainer, "").delete().build();
+        } catch (HttpClientErrorException httpError) {
+            assertEquals(HttpStatus.NOT_FOUND, httpError.getStatusCode());
+            LogManager.getLogger(this.getClass()).info(
+                    "testDeleteTrainingPlayer (" + httpError.getMessage() + "):\n    " + httpError.getResponseBodyAsString());
+        }
+        
+        TrainingWrapper[] list = new RestBuilder<TrainingWrapper[]>(RestService.URL).path(Uris.TRAININGS).basicAuth(tokensPlayer.get(0), "").clazz(TrainingWrapper[].class).get().build();
+        assertEquals(list.length, 0);
+    }
+    
     @After
     public void deleteAll() {
         new RestService().deleteAll();

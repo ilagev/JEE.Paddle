@@ -149,4 +149,8 @@ public class TrainingController {
         trainingDao.save(training);
     }
 
+    public void deleteTraining(int id) {
+        trainingDao.delete(trainingDao.findById(id));
+    }
+
 }
