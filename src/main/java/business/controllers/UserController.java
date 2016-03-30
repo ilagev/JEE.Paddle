@@ -41,4 +41,8 @@ public class UserController {
     public boolean exists(int traineeId) {
         return userDao.findById(traineeId) != null;
     }
+
+    public Object findAll() {
+        return userDao.findAll();
+    }
 }
