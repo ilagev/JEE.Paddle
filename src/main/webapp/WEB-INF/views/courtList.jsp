@@ -7,32 +7,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Users list</title>
+<title>Courts list</title>
 </head>
 <body>
-    <H1>Listado de usuarios</H1>
+    <H1>Listado de pistas</H1>
     <table border="1">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Birthdate</th>
+                <th>Active</th>
             </tr>
         </thead>
         <tbody>
-            <c:forEach items="${userList}" var="user">
+            <c:forEach items="${courtList}" var="court">
                 <tr>
-                    <td>${user.id}</td>
-                    <td>${user.username}</td>
-                    <td>${user.email}</td>
-                    <td><fmt:formatDate value="${user.birthDate.time}" type="date" dateStyle="short" /></td>
-                    <td><a href="<c:url value='/delete-user/${user.id}' />">delete</a></td>
+                    <td>${court.courtId}</td>
+                    <td>${court.active}</td>
+                    <td><a href="<c:url value='/delete-court/${court.courtId}' />">delete</a></td>
                 </tr>
             </c:forEach>
         </tbody>
     </table>
-    <p><a href="<c:url value='/create-user'/>">Create User</a></p>
+    <p><a href="<c:url value='/create-court'/>">Create court</a></p>
     <a href="<c:url value="/home"/>">Home</a>
 </body>
 </html>

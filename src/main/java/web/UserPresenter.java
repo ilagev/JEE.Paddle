@@ -15,7 +15,7 @@ import business.controllers.UserController;
 import business.wrapper.UserWrapper;
 
 @Controller
-public class Presenter {
+public class UserPresenter {
     
     private UserController userController;
     
@@ -29,16 +29,6 @@ public class Presenter {
         ModelAndView modelAndView = new ModelAndView("/userList");
         modelAndView.addObject("userList", userController.findAll());
         return modelAndView;
-    }
-    
-    @RequestMapping("/home")
-    public String home() {
-        return "redirect:/user-list";
-    }
-    
-    @RequestMapping("/")
-    public String root() {
-        return "redirect:/user-list";
     }
     
     @RequestMapping(value = "/create-user", method = RequestMethod.GET)

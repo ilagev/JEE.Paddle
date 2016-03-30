@@ -52,4 +52,8 @@ public class CourtController {
         return courtDao.findOne(courtId) != null;
     }
 
+    public void deleteCourt(int id) {
+        courtDao.delete(courtDao.findById(id));
+    }
+    
 }

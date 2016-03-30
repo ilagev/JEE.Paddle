@@ -27,6 +27,7 @@
         <p><input type="submit" value="Crear"></p>
     </form:form>
 
-    <a href="<c:url value="/home"/>">Home</a>
+    <p><a href="<c:url value="/user-list"/>">Volver a lista de usuarios</a></p>
+    <p><a href="<c:url value="/home"/>">Home</a></p>
 </body>
 </html>
