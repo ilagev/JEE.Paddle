@@ -1,7 +1,10 @@
 # Tecnología Spring: Proyecto Padel
-#### Back-end con Tecnologías de Código Abierto (SPRING)
-#### [Máster en Ingeniería Web por la U.P.M.](http://miw.etsisi.upm.es)
+###### Apartados realizados:
 
+* Persistencia (A, B, C)
+* API (A, B, C)
+* Web con JSP + JSTL. Operaciones realizadas: creación, eliminación y listado de usuarios y pistas de paddle
 
+______
 ###### Autor: Iván Lage Vázquez
 
