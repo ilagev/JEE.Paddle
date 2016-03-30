@@ -45,4 +45,10 @@ public class UserController {
     public Object findAll() {
         return userDao.findAll();
     }
+    
+    public void deleteUser(int id) {
+        User user = userDao.findById(id);
+        authorizationDao.delete(authorizationDao.findByUser(user));
+        userDao.delete(user);
+    }
 }

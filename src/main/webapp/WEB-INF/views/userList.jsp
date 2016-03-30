@@ -27,6 +27,7 @@
                     <td>${user.username}</td>
                     <td>${user.email}</td>
                     <td><fmt:formatDate value="${user.birthDate.time}" type="date" dateStyle="short" /></td>
+                    <td><a href="<c:url value='/delete-user/${user.id}' />">delete</a></td>
                 </tr>
             </c:forEach>
         </tbody>
