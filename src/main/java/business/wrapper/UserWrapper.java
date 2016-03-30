@@ -3,6 +3,8 @@ package business.wrapper;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import data.entities.Role;
 
 public class UserWrapper {
@@ -13,6 +15,7 @@ public class UserWrapper {
 
     private String password;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Calendar birthDate;
 
     private Role role;
